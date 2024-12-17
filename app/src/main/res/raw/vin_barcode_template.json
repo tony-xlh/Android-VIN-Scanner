@@ -1,0 +1,40 @@
+{
+  "CaptureVisionTemplates": [
+    {
+      "Name": "ReadVINBarcode",
+      "ImageROIProcessingNameArray": [
+        "roi-read-vin-barcodes"
+      ]
+    }
+  ],
+  "TargetROIDefOptions": [
+    {
+      "Name": "roi-read-vin-barcodes",
+      "TaskSettingNameArray": ["task-read-vin-barcodes"]
+    }
+  ],
+  "BarcodeReaderTaskSettingOptions": [
+    {
+      "Name": "task-read-vin-barcodes",
+      "LocalizationModes": [
+        {
+          "Mode": "LM_CONNECTED_BLOCKS"
+        },
+        {
+          "Mode": "LM_SCAN_DIRECTLY",
+          "ScanStride": 0,
+          "ScanDirection": 0,
+          "IsOneDStacked": 0
+        },
+        {
+          "Mode": "LM_STATISTICS"
+        },
+        {
+          "Mode": "LM_LINES"
+        }
+      ],
+      "BarcodeFormatIds": ["BF_CODE_39", "BF_QR_CODE", "BF_DATAMATRIX"],
+      "ExpectedBarcodesCount": 1
+    }
+  ]
+}
