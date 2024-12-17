@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.dynamsoft.core.basic_structures.CompletionListener;
+import com.dynamsoft.core.basic_structures.DSRect;
 import com.dynamsoft.cvr.CaptureVisionRouter;
 import com.dynamsoft.cvr.CaptureVisionRouterException;
 import com.dynamsoft.dce.CameraEnhancer;
@@ -48,17 +49,15 @@ public class MainActivity extends AppCompatActivity {
         PermissionUtil.requestCameraPermission(this);
         CameraView cameraView = findViewById(R.id.camera_view);
         mCamera = new CameraEnhancer(cameraView, this);
+        DSRect region = new DSRect(0,0.4f,1,0.6f,true);
         mRouter = new CaptureVisionRouter(this);
         try {
-            String template = readTemplate(R.raw.vin_barcode_template);
-            Log.d("DCV","template");
-            Log.d("DCV",template);
+            mCamera.setScanRegion(region);
+            String template = readTemplate(R.raw.vin_template);
             mRouter.initSettings(template);
             mRouter.setInput(mCamera);
-        } catch (CaptureVisionRouterException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         startScanning();
     }
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (CameraEnhancerException e) {
             e.printStackTrace();
         }
-        mRouter.startCapturing("ReadVINBarcode", new CompletionListener() {
+        mRouter.startCapturing("ReadVINBarcodeAndText", new CompletionListener() {
             @Override
             public void onSuccess() {}
             @Override
