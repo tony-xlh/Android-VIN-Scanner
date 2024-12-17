@@ -26,6 +26,7 @@ import com.dynamsoft.dbr.DecodedBarcodesResult;
 import com.dynamsoft.dce.CameraEnhancer;
 import com.dynamsoft.dce.CameraEnhancerException;
 import com.dynamsoft.dce.CameraView;
+import com.dynamsoft.dce.EnumEnhancerFeatures;
 import com.dynamsoft.dce.utils.PermissionUtil;
 import com.dynamsoft.dlr.TextLineResultItem;
 import com.dynamsoft.license.LicenseManager;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         filter = new MultiFrameResultCrossFilter();
         try {
             mCamera.setScanRegion(region);
+            mCamera.enableEnhancedFeatures(EnumEnhancerFeatures.EF_FRAME_FILTER);
             String template = readTemplate(R.raw.vin_template);
             mRouter.initSettings(template);
             mRouter.setInput(mCamera);
