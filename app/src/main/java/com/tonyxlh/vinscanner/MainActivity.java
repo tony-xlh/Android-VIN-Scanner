@@ -29,6 +29,7 @@ import com.dynamsoft.dce.CameraView;
 import com.dynamsoft.dce.utils.PermissionUtil;
 import com.dynamsoft.dlr.TextLineResultItem;
 import com.dynamsoft.license.LicenseManager;
+import com.dynamsoft.utility.MultiFrameResultCrossFilter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private CaptureVisionRouter mRouter;
     private AlertDialog mAlertDialog;
     private TextView textView;
+    private MultiFrameResultCrossFilter filter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +64,14 @@ public class MainActivity extends AppCompatActivity {
         mCamera = new CameraEnhancer(cameraView, this);
         DSRect region = new DSRect(0,0.4f,1,0.6f,true);
         mRouter = new CaptureVisionRouter(this);
+        filter = new MultiFrameResultCrossFilter();
         try {
             mCamera.setScanRegion(region);
             String template = readTemplate(R.raw.vin_template);
             mRouter.initSettings(template);
             mRouter.setInput(mCamera);
+            filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
+            mRouter.addResultFilter(filter);
             mRouter.addResultReceiver(new CapturedResultReceiver() {
                 @Override
                 public void onCapturedResultReceived(@NonNull CapturedResult result) {
