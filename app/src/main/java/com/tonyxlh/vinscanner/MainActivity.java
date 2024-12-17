@@ -26,6 +26,7 @@ import com.dynamsoft.dbr.DecodedBarcodesResult;
 import com.dynamsoft.dce.CameraEnhancer;
 import com.dynamsoft.dce.CameraEnhancerException;
 import com.dynamsoft.dce.CameraView;
+import com.dynamsoft.dce.EnumCameraState;
 import com.dynamsoft.dce.EnumEnhancerFeatures;
 import com.dynamsoft.dce.utils.PermissionUtil;
 import com.dynamsoft.dlr.TextLineResultItem;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog mAlertDialog;
     private TextView textView;
     private MultiFrameResultCrossFilter filter;
+    private boolean isScanning = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
         reader.close();
         return content;
     }
+
     private void startScanning(){
+        if (isScanning) {
+            return;
+        }
+        isScanning = true;
         try {
             mCamera.open();
         } catch (CameraEnhancerException e) {
@@ -135,6 +142,28 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(() -> showDialog("Error", String.format(Locale.getDefault(), "ErrorCode: %d %nErrorMessage: %s", errorCode, errorString)));
             }
         });
+    }
+
+    private void stopScanning(){
+        try {
+            mCamera.close();
+        } catch (CameraEnhancerException e) {
+            e.printStackTrace();
+        }
+        mRouter.stopCapturing();
+        isScanning = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startScanning();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScanning();
     }
 
     private void showDialog(String title, String message) {
