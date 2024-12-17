@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             mRouter.initSettings(template);
             mRouter.setInput(mCamera);
             filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_TEXT_LINE, true);
+            filter.enableResultCrossVerification(EnumCapturedResultItemType.CRIT_BARCODE, true);
             mRouter.addResultFilter(filter);
             mRouter.addResultReceiver(new CapturedResultReceiver() {
                 @Override
@@ -89,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
                             textLine = ((TextLineResultItem) item).getText();
                         }
                     }
-                    displayResult(barcode,textLine);
+                    if (!barcode.equals("") || !textLine.equals("")) {
+                        displayResult(barcode,textLine);
+                    }
                 }
             });
         } catch (Exception e) {
